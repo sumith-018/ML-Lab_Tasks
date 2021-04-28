@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 28 14:01:04 2021
-
-@author: dell
-"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,8 +9,7 @@ def kernel(X1, X2, scale=1.0, sigma_f=1.0):
     ''' Uncomment for Gaussian Kernel '''
     sqdist = np.sum(X1**2, 1).reshape(-1, 1) + np.sum(X2**2, 1) - 2 * np.dot(X1, X2.T)
     return sigma_f**2 * np.exp((-0.5 / scale**2) * sqdist)
-#     ''' Uncomment for Linear Kernel '''
-#     return X1 @ X2.T
+
 def dataSet2():
     X, y = make_moons(n_samples=100, noise=0.1)
     y = np.where(y==0, -1, y)
@@ -34,7 +27,7 @@ def dualOptimizer(H,m,y, C):
     q = cvxopt_matrix(-np.ones((m, 1)))
     G = cvxopt_matrix(-np.eye(m))
 
-    #Changing the constraints for soft margin. For hard margin, C = 0.    
+ 
     h = cvxopt_matrix(np.ones(m) * C)
     A = cvxopt_matrix(y.reshape(1, -1))
     b = cvxopt_matrix(np.zeros(1))
@@ -67,11 +60,11 @@ k = kernel(X,X)
 t = np.dot(y,y.T)
 H = k*t              
 m,n = X.shape
-C = float(input("Enter constraint constant(C): "))
+C = 0
 
 alphas = dualOptimizer(H,m,y,C)
 
-#Selecting the set of indices S corresponding to non zero parameters
+
 S = (alphas > 1e-4).flatten()
 
 w = ((y[S] * alphas[S]).T @ X[S]).reshape(-1,1)
